@@ -1,0 +1,65 @@
+- @acumulate = params[:acumulate] || 'beginning_of_month'
+- @data_field = params[:data_field] || 'created_at'
+- @chart = params[:chart] || 'line_chart'
+- @calculation = params[:calculation] || 'sum'
+      
+- data_fields = []
+- numeric_fields = []
+- if @filterable_fields.present?
+  - @filterable_fields.each do |field|
+    - if field.type == :float || field.type == :integer && field.name != :id
+      - @met ||= field.name
+      - numeric_fields << field.name
+    - elsif field.type == :date || field.type == :datetime
+      - data_fields << field  
+- if @met       
+  = content_for :chart do
+    = javascript_include_tag 'rails_admin/d3'
+    - klass = @abstract_model.model_name.constantize  
+    = form_tag(index_path(params.except(*%w[page f query])), method: :get, class: "pjax-form form-inline") do
+      .well
+        - field = data_fields.first
+        - index = DateTime.now.to_s.slice(5,11)
+        - operator_name = "f[#{field.name}][#{index}][o]"
+        - value_name = "f[#{field.name}][#{index}][v]"
+        - field_value = ''
+        - operator_options = {"today" => "today","yesterday" => "yesterday","this_week" => "this_week","last_week" => "last_week","_not_null" => "is_present","_null" => "is_blank", "between" => "between_and_"} 
+        
+        .container-fluid
+          .row-fluid
+            .span8
+                  
+              %span#filters_box_date
+                %p.filter.form-search
+                  %select.input-small{:name => field.label }
+                    - data_fields.each do |f|
+                      %option{"data-additional-fieldset" => "data_field", :selected => "selected", :value => f.label }
+                        %a.delete{:href => "#"}
+                          %i.icon-trash.icon-white
+                        = f.label
+          
+                  %select.switch-additionnal-fieldsets.input-small{:name => operator_name }
+                    - operator_options.each do |opr_name, opr_presentation|
+                      %option{"data-additional-fieldset" => opr_name, :selected => "selected", :value => opr_name}
+                        = opr_presentation   
+                  %input.date.additional-fieldset.between.input-small{:name => value_name + '[]', :placeholder => "-∞", :style => "display: inline-block", :type => "text", :value => field_value[1] || ''}
+                  %input.date.additional-fieldset.between.input-small{:name => value_name + '[]', :placeholder => "-∞", :style => "display: inline-block", :type => "text", :value => field_value[2] || ''}
+              %br
+              %br          
+        
+              %hr.filters_box{style: "display:#{@ordered_filters.empty? ? 'none' : 'block'}"}
+              %button.btn.btn-primary{type: "submit", :'data-disable-with' => "<i class='icon-white icon-refresh'></i> ".html_safe + t("admin.misc.refresh")}
+                %i.icon-white.icon-refresh
+                = t("admin.misc.refresh")
+          
+        
+            .span4
+              = select_tag :met, options_for_select( numeric_fields )
+              = select_tag :acumulate, options_for_select( [['Beginning of week', 'beginning_of_week'],['Beginning of Month', 'beginning_of_month'], ['Week days', 'wday'], ['hours','hour'] ] )
+              = select_tag :calculation, options_for_select( [['Sum', 'sum'],['Average', 'average'],['Count', 'count'], ['Maximum', 'max'], ['Minimum', 'min'] ])
+              = select_tag :chart, options_for_select( [['Line chart', 'line_chart'],['Column chart', 'column_chart'],['Pie chart', 'pie_chart']] )  
+              
+      %script
+        $('#filters_box_date .date').datepicker({format: 'mm/dd/yyyy'});
+        
+    = send(@chart, [{:name=>'michart', :data => klass.data_by(@objects,@met,@data_field,@calculation, @acumulate )[0][:data]}],library: {chart:{zoomType:'x',style: {overflow: 'visible'}}} )        
