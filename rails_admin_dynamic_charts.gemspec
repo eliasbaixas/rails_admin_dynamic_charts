@@ -11,9 +11,9 @@ Gem::Specification.new do |s|
   s.email       = %w(sanchojaf@gmail.com)
   s.homepage    = 'https://github.com/openjaf/rails_admin_dynamic_charts'
   s.summary     = 'Charts for Rails Admin'
-  s.description = 'HighCharts for Rails Admin'
+  s.description = 'Dynamic Charts for Rails Admin'
 
-  s.files = Dir['{app,config,db,lib}/**/*'] + %w(MIT-LICENSE Rakefile README.md)
+  s.files = Dir['{app,config,db,lib}/**/*']
 
   s.add_dependency 'rails', '>= 3.2'
   s.add_dependency 'rails_admin', '> 0'

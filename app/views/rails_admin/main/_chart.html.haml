@@ -2,6 +2,10 @@
 - @data_field = params[:data_field] || 'created_at'
 - @chart = params[:chart] || 'line_chart'
 - @calculation = params[:calculation] || 'sum'
+
+- acumulate_types = {'weekly' => 'beginning_of_week', 'monthly' => 'beginning_of_month', 'week days' => 'wday', 'hours' => 'hour' }
+- calculation_types = {'count' => 'count', 'maximum' => 'max', 'mean' => 'mean','median' => 'median','minimum' => 'min', 'mode' => 'mode', 'sum' => 'sum', 'variance' => 'variance'}
+- chart_types = {'line chart' => 'line_chart','column chart' => 'column_chart','pie chart' => 'pie_chart'}
       
 - data_fields = []
 - numeric_fields = []
@@ -55,11 +59,11 @@
         
             .span4
               = select_tag :met, options_for_select( numeric_fields )
-              = select_tag :acumulate, options_for_select( [['Beginning of week', 'beginning_of_week'],['Beginning of Month', 'beginning_of_month'], ['Week days', 'wday'], ['hours','hour'] ] )
-              = select_tag :calculation, options_for_select( [['Sum', 'sum'],['Average', 'average'],['Count', 'count'], ['Maximum', 'max'], ['Minimum', 'min'] ])
-              = select_tag :chart, options_for_select( [['Line chart', 'line_chart'],['Column chart', 'column_chart'],['Pie chart', 'pie_chart']] )  
+              = select_tag :acumulate, options_for_select( acumulate_types )
+              = select_tag :calculation, options_for_select( calculation_types )
+              = select_tag :chart, options_for_select( chart_types )  
               
       %script
         $('#filters_box_date .date').datepicker({format: 'mm/dd/yyyy'});
-        
-    = send(@chart, [{:name=>'michart', :data => klass.data_by(@objects,@met,@data_field,@calculation, @acumulate )[0][:data]}],library: {chart:{zoomType:'x',style: {overflow: 'visible'}}} )        
+    - data = klass.data_by(@objects,@met,@data_field,@calculation, @acumulate )[0][:data]
+    = send(@chart, [{name: "#{@met.to_s.titleize} by #{@calculation.to_s.titleize} ",data: data }],library: {chart:{zoomType:'x',style: {overflow: 'visible'}}} )    
