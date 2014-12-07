@@ -6,7 +6,12 @@ In your `Gemfile`, add the following dependency:
     
     gem 'rails_admin_dynamic_charts', github: 'openjaf/rails_admin_dynamic_charts'
     gem 'chartkick'
+
+You can optionally add another gem
+
     gem 'descriptive_statistics'
+    
+This include other statistics: mean, median, mode and variance.    
 
 Run:
 
@@ -18,4 +23,5 @@ For any model where you wish to display a chart add the following just under the
 include RailsAdminDynamicCharts::Datetime
 ```
 
-Now only work with '>~ 0.6.5'
+For now only work with rails_admin '>~ 0.6.5'
+
