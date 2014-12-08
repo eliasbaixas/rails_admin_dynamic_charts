@@ -49,7 +49,9 @@
     }
   end.join.html_safe if @ordered_filters
 
-= render 'chart', query: query, export_action: export_action
+- klass = @abstract_model.model_name.constantize
+- if klass.ancestors.include? RailsAdminDynamicCharts::Datetime
+  = render 'chart', query: query, export_action: export_action
 
 = content_for :contextual_tabs do
   = bulk_menu

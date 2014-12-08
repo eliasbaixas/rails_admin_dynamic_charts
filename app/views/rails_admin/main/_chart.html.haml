@@ -3,7 +3,7 @@
 - @chart = params[:chart] || 'line_chart'
 - @calculation = params[:calculation] || 'sum'
 
-- acumulate_types = {'weekly' => 'beginning_of_week', 'monthly' => 'beginning_of_month', 'week days' => 'wday', 'hours' => 'hour' }
+- acumulate_types = {'daily' => 'beginning_of_day', 'weekly' => 'beginning_of_week', 'monthly' => 'beginning_of_month', 'quarterly' => 'beginning_of_quarter','yearly' => 'beginning_of_year', 'week days' => 'wday', 'hours' => 'hour' }
 - calculation_types = {'count' => :count, 'maximum' => :max, 'minimum' => :min,'sum' => 'sum'}
 
 - calculation_types['mean'] = :mean            if Array.method_defined? :mean
