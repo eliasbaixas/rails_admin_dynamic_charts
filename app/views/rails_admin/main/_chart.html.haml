@@ -4,14 +4,14 @@
 - @calculation = params[:calculation] || 'sum'
 
 - acumulate_types = {'daily' => 'beginning_of_day', 'weekly' => 'beginning_of_week', 'monthly' => 'beginning_of_month', 'quarterly' => 'beginning_of_quarter','yearly' => 'beginning_of_year', 'week days' => 'wday', 'hours' => 'hour' }
-- calculation_types = {'count' => :count, 'maximum' => :max, 'minimum' => :min,'sum' => 'sum'}
+- calculation_types = {'count' => :count, 'max' => :max, 'min' => :min,'sum' => 'sum'}
 
 - calculation_types['mean'] = :mean            if Array.method_defined? :mean
 - calculation_types['median'] = :median        if Array.method_defined? :median
 - calculation_types['mode'] = :mode            if Array.method_defined? :mode
 - calculation_types['variance'] = :variance    if Array.method_defined? :variance
 
-- chart_types = {'line chart' => 'line_chart','column chart' => 'column_chart','pie chart' => 'pie_chart'}
+- chart_types = {'line chart' => 'line_chart','column chart' => 'column_chart', 'area chart' => :area_chart, 'bar chart' => :bar_chart, 'pie chart' => :pie_chart}
       
 - data_fields = []
 - numeric_fields = []
@@ -72,4 +72,4 @@
       %script
         $('#filters_box_date .date').datepicker({format: 'mm/dd/yyyy'});
     - data = klass.data_by(@objects,@met,@data_field,@calculation, @acumulate )[0][:data]
-    = send(@chart, [{name: "#{@met.to_s.titleize} / #{@acumulate.to_s.titleize} / #{@calculation.to_s.titleize} ",data: data }],library: {chart:{zoomType:'x',style: {overflow: 'visible'}}} )    
+    = send(@chart, data, library: {chart:{zoomType:'x',style: {overflow: 'visible'}}} )    

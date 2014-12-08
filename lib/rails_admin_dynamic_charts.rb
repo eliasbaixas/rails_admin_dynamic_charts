@@ -9,13 +9,12 @@ module RailsAdminDynamicCharts
 
     module ClassMethods
 
-      def data_by(coll, base_cal, date_field, calculation, acumulate = nil )
-        coll = coll.group_by { |o| acumulate.present? ? o.send(date_field).send(acumulate) : o.send(date_field) }  
-      
+      def data_by(set, base_cal, date_field, calculation, acumulate = nil )
+        set = set.group_by { |o| acumulate.present? ? o.send(date_field).send(acumulate) : o.send(date_field) }
         met = attribute_method?(base_cal) ? "(&:#{base_cal})" : "send(#{base_cal})"
-        p = eval "lambda { |coll| coll.map#{met}.#{calculation} }"
-        coll = acumulate =~ /^beginning_of/ ? coll.map {|k,v| [k,p.call(v)]} : coll.sort.map {|c| [ send(acumulate)[c[0]], p.call(c[1]) ]}
-        [{:data => coll}]
+        proc = eval "lambda { |collection| collection.map#{met}.#{calculation} }"
+        set = acumulate =~ /^beginning_of/ ? set.map {|k,v| [k,proc.call(v)]} : set.sort.map {|c| [ send(acumulate)[c[0]], proc.call(c[1]) ]}
+        [{:data => set}]
       end   
     
       def wday
