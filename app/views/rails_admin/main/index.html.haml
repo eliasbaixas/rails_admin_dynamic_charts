@@ -38,6 +38,9 @@
     filter_name = filter_for_field.keys.first
     filter_hash = filter_for_field.values.first
     field = @filterable_fields.find{ |field| field.name == filter_name.to_sym }
+    unless field
+      fail "#{filter_name} is not currently filterable; filterable fields are #{@filterable_fields.map(&:name).join(', ')}"
+    end
     field_options = case field.type
     when :enum
       options_for_select(field.with(object: @abstract_model.model.new).enum, filter_hash['v'])
@@ -49,10 +52,11 @@
     }
   end.join.html_safe if @ordered_filters
 
+-#for Charts
 - klass = @abstract_model.model_name.constantize
 - if klass.ancestors.include? RailsAdminDynamicCharts::Datetime
-  = render 'chart', query: query, export_action: export_action
-
+  = render 'chart'
+  
 = content_for :contextual_tabs do
   = bulk_menu
   - if @filterable_fields.present?
@@ -68,7 +72,7 @@
           - else
             - ''
           %li
-            %a{href: '#', :"data-field-label" => field.label, :"data-field-name" => field.name, :"data-field-options" => field_options.html_safe, :"data-field-type" => field.type, :"data-field-value" => ""}= field.label
+            %a{href: '#', :"data-field-label" => field.label, :"data-field-name" => field.name, :"data-field-options" => field_options.html_safe, :"data-field-type" => field.type, :"data-field-value" => ""}= capitalize_first_letter(field.label)
 
 #list
   %script
@@ -91,17 +95,20 @@
   %style
     - properties.select{ |p| p.column_width.present? }.each do |property|
       = "#list th.#{property.css_class} { width: #{property.column_width}px; min-width: #{property.column_width}px; }"
-      = "#list td.#{property.css_class} { max-width: #{property.column_width}px; }"
+      = "#list td.#{property.css_class} { max-width: #{property.column_width}px; }"
   = form_tag(index_path(params.except(*%w[page f query])), method: :get, class: "pjax-form form-inline") do
     .well
       %span#filters_box
       %hr.filters_box{style: "display:#{@ordered_filters.empty? ? 'none' : 'block'}"}
       %input.input-small{name: "query", type: "search", value: query, placeholder: t("admin.misc.filter")}
+      = content_for :chart_controls
       %button.btn.btn-primary{type: "submit", :'data-disable-with' => "<i class='icon-white icon-refresh'></i> ".html_safe + t("admin.misc.refresh")}
         %i.icon-white.icon-refresh
         = t("admin.misc.refresh")
       - if export_action
         %span{style: 'float:right'}= link_to wording_for(:link, export_action), export_path(params.except('set').except('page')), class: 'btn btn-info'
+
+  = content_for :chart_chart
 
   - unless @model_config.list.scopes.empty?
     %ul.nav.nav-tabs#scope_selector
@@ -126,7 +133,7 @@
             - if property.sortable
               - sort_location = index_path params.except('sort_reverse').except('page').merge(sort: property.name).merge(selected && sort_reverse != "true" ? {sort_reverse: "true"} : {})
               - sort_direction = (sort_reverse == 'true' ? "headerSortUp" : "headerSortDown" if selected)
-            %th{class: "#{property.sortable && "header pjax" || nil} #{sort_direction if property.sortable && sort_direction} #{property.css_class} #{property.type_css_class}", :'data-href' => (property.sortable && sort_location), rel: "tooltip", title: "#{property.hint}"}= property.label
+            %th{class: "#{property.sortable && "header pjax" || nil} #{sort_direction if property.sortable && sort_direction} #{property.css_class} #{property.type_css_class}", :'data-href' => (property.sortable && sort_location), rel: "tooltip", title: "#{property.hint}"}= capitalize_first_letter(property.label)
           - if other_right
             %th.other.right.shrink= "..."
           %th.last.shrink

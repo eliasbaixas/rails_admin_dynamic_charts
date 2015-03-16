@@ -1,7 +1,5 @@
 en:
   admin:
-    actions:
-      charts:
-        title: Charts
-        menu: Charts
-        breadcrumb: Charts
+    charts:
+      axisa_label: "Time line"
+      axisa_field_label: "Field"
