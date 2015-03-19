@@ -38,12 +38,12 @@
           %option{value: f.name }
             = f.label
     %label= t('admin.charts.axisa_field_label')
-    = select_tag :met, options_for_select( numeric_fields, @met )
-    = select_tag :acumulate, options_for_select( acumulate_types, @acumulate )
-    = select_tag :calculation, options_for_select( calculation_types, @calculation )
-    = select_tag :chart, options_for_select( chart_types, @chart )
+    = select_tag :met, options_for_select( numeric_fields, @met ), class: 'input-small'
+    = select_tag :acumulate, options_for_select( acumulate_types, @acumulate ), class: 'input-small'
+    = select_tag :calculation, options_for_select( calculation_types, @calculation ), class: 'input-small'
+    = select_tag :chart, options_for_select( chart_types, @chart ), class: 'input-small'
 
   = content_for :chart_chart do
-    - all_objects = @objects.limit(klass.count).skip(0)
+    - all_objects = @objects.limit(klass.count).offset(0)
     - data = klass.data_by(all_objects,@met,@data_field,@calculation, @acumulate )[0][:data]
     = send(@chart, data, library: {chart:{zoomType:'x',style: {overflow: 'visible'}}} )
