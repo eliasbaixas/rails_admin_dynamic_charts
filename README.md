@@ -1,6 +1,6 @@
 # RailsAdminDynamicCharts
 
-Add dinamyc charts to RailsAdmin.
+Add dynamic charts to RailsAdmin.
 
 In your `Gemfile`, add the following dependency:
     
