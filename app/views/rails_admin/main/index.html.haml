@@ -53,8 +53,8 @@
   end.join.html_safe if @ordered_filters
 
 -#for Charts
-- klass = @abstract_model.model_name.constantize
-- if klass.ancestors.include? RailsAdminDynamicCharts::Datetime
+- klass = @abstract_model.model
+- if klass.is_a?(Class) && klass.ancestors.include?(RailsAdminDynamicCharts::Datetime)
   = render 'chart'
   
 = content_for :contextual_tabs do
