@@ -5,7 +5,6 @@
 //=  require 'jquery-ui/sortable'
 //=  require 'jquery-ui/autocomplete'
 //=  require 'jquery-ui/datepicker'
-//=  require 'rails_admin/jquery.ui.timepicker'
 //=  require 'rails_admin/ra.datetimepicker'
 //=  require 'rails_admin/jquery.colorpicker'
 //=  require 'rails_admin/ra.filter-box'
