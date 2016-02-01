@@ -23,7 +23,6 @@
     - elsif field.type == :date || field.type == :datetime
       - data_fields << field
 - if @met
-  = javascript_include_tag 'rails_admin/d3'
   - klass = @abstract_model.model_name.constantize
   - field = data_fields.first
 
