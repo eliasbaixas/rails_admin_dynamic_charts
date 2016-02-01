@@ -17,7 +17,7 @@
 - numeric_fields = []
 - if @filterable_fields.present?
   - @filterable_fields.each do |field|
-    - if ( field.type == :float || field.type == :integer || field.type == :decimal ) && field.name != :id
+    - if ( field.type == :float || field.type == :integer || field.type == :decimal || field.type == :enum ) && field.name != :id
       - @met = params[:met] || field.name
       - numeric_fields << field.name
     - elsif field.type == :date || field.type == :datetime
