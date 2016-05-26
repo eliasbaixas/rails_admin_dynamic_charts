@@ -23,5 +23,4 @@ For any model where you wish to display a chart add the following just under the
 include RailsAdminDynamicCharts::Datetime
 ```
 
-For now only work with rails_admin '>~ 0.6.5'
 
