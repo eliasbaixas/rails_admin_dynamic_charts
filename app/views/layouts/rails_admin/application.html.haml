@@ -6,11 +6,9 @@
     %meta{content: "NONE,NOARCHIVE", name: "robots"}
     = csrf_meta_tag
     = stylesheet_link_tag "rails_admin/rails_admin.css", media: :all
-    = #stylesheet_link_tag "rails_admin/bootstrap/bootstrap-select"
     = javascript_include_tag "rails_admin/rails_admin.js"
-    = # javascript_include_tag "//www.google.com/jsapi", "chartkick"
+    = javascript_include_tag "rails_admin/dynamic_charts.js"
     = javascript_include_tag "rails_admin/highcharts.js", "chartkick"
-    -# Initialize JS simple i18n
     :javascript
       RailsAdmin.I18n.init('#{I18n.locale}', JSON.parse("#{j I18n.t("admin.js").to_json}"))
   %body.rails_admin
